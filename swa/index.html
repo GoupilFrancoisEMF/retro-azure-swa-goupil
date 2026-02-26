@@ -52,20 +52,23 @@
   }
 
   function startEmu(romUrl) {
-    // Nettoyage si relance
-    document.getElementById("game").innerHTML = "";
+  document.getElementById("game").innerHTML = ""; // reset previous game
 
-    // Configuration EmulatorJS (exemple NES)
-    // Doc + exemples: :contentReference[oaicite:9]{index=9}
-    window.EJS_player = "#game";
-    window.EJS_core = "nestopia";       // NES
-    window.EJS_gameUrl = romUrl;        // /api/roms/xxx.nes (proxy via SWA)
-    window.EJS_pathtodata = "https://www.emulatorjs.com/data/"; // assets emulator
+  // Determine core based on file extension
+  let core = "nestopia"; // default NES
+  if (romUrl.endsWith(".gba")) core = "mgba";
+  else if (romUrl.endsWith(".gb") || romUrl.endsWith(".gbc")) core = "gambatte";
 
-    const s = document.createElement("script");
-    s.src = "https://www.emulatorjs.com/loader.js";
-    document.body.appendChild(s);
-  }
+  // Setup EmulatorJS
+  window.EJS_player = "#game";
+  window.EJS_core = core;
+  window.EJS_gameUrl = romUrl;
+  window.EJS_pathtodata = "https://www.emulatorjs.com/data/";
+
+  const s = document.createElement("script");
+  s.src = "https://www.emulatorjs.com/loader.js";
+  document.body.appendChild(s);
+}
 
   playBtn.addEventListener("click", () => {
     const romUrl = gamesEl.value;
